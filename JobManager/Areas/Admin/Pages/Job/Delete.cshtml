@@ -1,0 +1,185 @@
+﻿@page
+@model DeleteModel
+@{
+    ViewData["Title"] = "List Jobs";
+}
+@{
+    var pagingModel = new JobManager.Helpers.PagingModel()
+            {
+                currentPage = Model.currentPage,
+                countPages = Model.countPage,
+                generateUrl = (int? p) => Url.Page("/Job/Index", new { p = p })
+            };
+}
+
+
+<!-- ========== section start ========== -->
+<section class="section">
+    <div class="container-fluid">
+        <!-- ========== title-wrapper start ========== -->
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-md-6">
+                    <div class="breadcrumb-wrapper mb-30">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- ========== title-wrapper end ========== -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    @*Start*@
+
+                    <div class="mb-2">
+                        <a class="btn btn-outline-primary" asp-page="./Create"><i class="lni lni-plus"></i> @_localization.Getkey("AddNewColor")</a>
+                    </div>
+                    @if (Model.soLuongCongViec > 0)
+                    {
+                        @*<br />
+                    <div class="mb-2">
+                    <a class="btn btn-outline-primary" id="exportColorExcelBtn"><i class="fa-regular fa-file-excel"></i></a>
+                    <a class="btn btn-outline-primary" id="exportColorPdfBtn"><i class="fa-regular fa-file-pdf"></i></a>
+                    </div>*@
+                        <br />
+                        <form method="get" asp-page="./Index">
+                            <div class="input-group">
+                                <input type="search" class="form-control rounded" name="Search" placeholder="" />
+                                <button type="submit" class="btn btn-outline-primary"><i class="lni lni-search-alt"></i> Search</button>
+                            </div>
+                        </form>
+                        <br />
+                        <partial name="_StatusMessage" model="@Model.StatusMessage" />
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>No.</th>
+                                <th>Job name</th>
+                                <th>Description</th>
+                                <th>Start day</th>
+                                <th>End day</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Task name</th>
+                            </tr>
+                            @{
+                                var stt = 1;
+                            }
+                            @foreach (var congViec in Model.congViecs)
+                            {
+                                <tr>
+                                    <td>
+                                        @stt
+                                        @{
+                                            stt++;
+                                        }
+                                    </td>
+                                    <td><a asp-page="./Edit" asp-route-jobid="@congViec.MaCongViec">@congViec.TenCongViec</a></td>
+                                    <td>@congViec.MoTaCongViec</td>
+                                    <td>@congViec.NgayBatDau</td>
+                                    <td>@congViec.NgayKetThuc</td>
+                                    @switch (congViec.TrangThai)
+                                    {
+                                        case -1:
+                                            <td></td>
+                                            break;
+                                        case 0:
+                                            <td></td>
+                                            break;
+                                        case 1:
+                                            <td></td>
+                                            break;
+                                        default:
+                                            <td></td>
+                                            break;
+                                    }
+
+                                    @switch (congViec.UuTien)
+                                    {
+                                        case -1:
+                                            <td></td>
+                                            break;
+                                        case 0:
+                                            <td></td>
+                                            break;
+                                        case 1:
+                                            <td></td>
+                                            break;
+                                        default:
+                                            <td></td>
+                                            break;
+                                    }
+                                    <td>--------</td>
+                                    <td>
+                                        <a asp-page="./Detail" asp-route-jobid="@congViec.MaCongViec" class="btn btn-outline-primary"><i class="lni lni-more"></i></a>
+                                        <a asp-page="./Edit" asp-route-jobid="@congViec.MaCongViec" class="btn btn-outline-success"><i class="lni lni-pencil"></i></a>
+                                        <a class="btn btn-outline-danger DeleteBtn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@congViec.MaCongViec"><i class="lni lni-trash-can"></i></a>
+
+                                        <div class="modal" id="confirmDeleteModal-@congViec.MaCongViec" tabindex="-1" aria-labelledby="confirmDeleteLabel-@congViec.MaCongViec" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmDeleteLabel-@congViec.MaCongViec">Conform deleted? </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @_localization.Getkey("XoaNSXContent") <strong>@congViec.MaCongViec</strong>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@_localization.Getkey("Cancel")</button>
+                                                        <form method="post" asp-page="./Delete" asp-route-jobid="@congViec.MaCongViec">
+                                                            <button type="submit" class="btn btn-danger">@_localization.Getkey("Xoa")</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form class="form-inline" style="display: inline;" asp-page="./PrintBill" asp-route-jobid="@congViec.MaCongViec">
+                                            <button type="submit" class="btn btn-outline-secondary"><i class="lni lni-printer"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                        <partial name="_Paging" model="pagingModel" />
+                    }
+                    else
+                    {
+
+                        <div class="text-center">
+                            <div>
+                                <div style="font-size: 20px; color: black"><br>--- @_localization.Getkey("List_empty") ---</div>
+                            </div>
+
+                        </div>
+
+                    }
+
+
+
+                    @*End*@
+                    <!-- End Chart -->
+                </div>
+            </div>
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- end container -->
+</section>
+<!-- ========== section end ========== -->
