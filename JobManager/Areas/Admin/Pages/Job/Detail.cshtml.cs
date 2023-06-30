@@ -15,9 +15,7 @@ namespace JobManager.Areas.Admin.Pages.Job
         public DetailModel(ApplicationDbContext context, INotyfService notyf, ILogger<JobPageModel> logger, LanguageService localization) : base(context, notyf, logger, localization)
         {
         }
-
         public CongViec congViec { get; set; }
-
         public string duAn { get; set; }
         public string trangThai { get; set; }
         public string uuTien { get; set; }
@@ -55,15 +53,15 @@ namespace JobManager.Areas.Admin.Pages.Job
                 trangThai = "Đã kết thúc";
 
 
-            if (congViec.UuTien.Equals(-1))
+            if (congViec.MucDoUuTien.Equals(-1))
             {
                 uuTien = "Không áp dụng";
             }
-            else if (congViec.UuTien.Equals(0))
+            else if (congViec.MucDoUuTien.Equals(0))
             {
                 uuTien = "Thấp";
             }
-            else if (congViec.UuTien.Equals(1))
+            else if (congViec.MucDoUuTien.Equals(1))
             {
                 uuTien = "Trung bình";
             }

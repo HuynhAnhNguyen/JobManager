@@ -36,6 +36,9 @@ namespace JobManager.Migrations
                     b.Property<string>("MoTaCongViec")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MucDoUuTien")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("NgayBatDau")
                         .HasColumnType("datetime2");
 
@@ -49,9 +52,6 @@ namespace JobManager.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TrangThai")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UuTien")
                         .HasColumnType("int");
 
                     b.HasKey("MaCongViec");

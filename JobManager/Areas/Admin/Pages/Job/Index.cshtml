@@ -101,7 +101,7 @@
                                             break;
                                     }
 
-                                    @switch (congViec.UuTien)
+                                    @switch (congViec.MucDoUuTien)
                                     {
                                         case -1:
                                             <td>Không áp dụng</td>
@@ -141,9 +141,9 @@
                                             </div>
                                         </div>
 
-                                        <form class="form-inline" style="display: inline;" asp-page="./PrintBill" asp-route-jobid="@congViec.MaCongViec">
+                                        @*<form class="form-inline" style="display: inline;" asp-page="./PrintBill" asp-route-jobid="@congViec.MaCongViec">
                                             <button type="submit" class="btn btn-outline-secondary"><i class="lni lni-printer"></i></button>
-                                        </form>
+                                        </form>*@
                                     </td>
                                 </tr>
                             }
@@ -156,7 +156,7 @@
 
                         <div class="text-center">
                             <div>
-                                <div style="font-size: 20px; color: black"><br>--- @_localization.Getkey("List_empty") ---</div>
+                                <div style="font-size: 20px; color: black"><br>--- Danh sách trống ---</div>
                             </div>
 
                         </div>

@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="~/css/fullcalendar.css" />
     <link rel="stylesheet" href="~/css/fullcalendar.css" />
     <link rel="stylesheet" href="~/css/main.css" />
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/de10f37630.js" crossorigin="anonymous"></script>
+    <script src="~/js/jquery-3.6.1.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <!-- ======== sidebar-nav start =========== -->
@@ -37,6 +42,11 @@
     <!-- ======== main-wrapper end =========== -->
 
     <!-- ========= All Javascript files linkup ======== -->
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Notyf")
+    @RenderSection("Scripts", required: false)
+
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/Chart.min.js"></script>
     <script src="~/js/dynamic-pie-chart.js"></script>

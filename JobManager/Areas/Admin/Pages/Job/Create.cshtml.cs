@@ -36,10 +36,10 @@ namespace JobManager.Areas.Admin.Pages.Job
             public DateTime? NgayKetThuc { get; set; }
 
             [Required(ErrorMessage = "Trạng thái là bắt buộc!")]
-            public int TrangThai { get; set; }
+            public int? TrangThai { get; set; }
 
             [Required(ErrorMessage = "Mức độ ưu tiên là bắt buộc!")]
-            public int MucDoUuTien { get; set; }
+            public int? MucDoUuTien { get; set; }
 
             public string? MaDuAn { get; set; }
 
@@ -70,9 +70,9 @@ namespace JobManager.Areas.Admin.Pages.Job
             congViec.NgayBatDau = Input.NgayBatDau;
             congViec.NgayKetThuc = Input.NgayKetThuc;
             congViec.TrangThai = Input.TrangThai;
-            congViec.UuTien = Input.MucDoUuTien;
+            congViec.MucDoUuTien = Input.MucDoUuTien;
             congViec.MaDuAn = Input.MaDuAn;
-            congViec.Deleted = null;
+            congViec.Deleted = false;
             congViec.NgayTaoCongViec = DateTime.Now;
             _context.CongViec.Add(congViec);
             await _context.SaveChangesAsync();

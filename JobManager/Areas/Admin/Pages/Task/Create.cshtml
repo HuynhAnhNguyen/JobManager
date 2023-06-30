@@ -1,8 +1,10 @@
 ﻿@page
-@model EditModel
+@model CreateModel
 @{
-    ViewData["Title"] = "List Jobs";
+    ViewData["Title"] = "List Tasks";
 }
+
+
 <!-- ========== section start ========== -->
 <section class="section">
     <div class="container-fluid">
@@ -37,21 +39,21 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                         <div class="card-body">
                             <div class="title">
-                                <h3>Chỉnh sửa công việc</h3>
+                                <h3>Thêm dự án</h3>
                                 <p>
-                                    Chỉnh sửa công việc thuộc dự án
+                                    Thêm dự án mới
                                 </p>
                             </div>
                             <div class="form-floating">
-                                <input asp-for="Input.TenCongViec" class="form-control" aria-required="true" placeholder="Nhập tên công việc để tìm kiếm" />
-                                <label asp-for="Input.TenCongViec">Tên công việc <span class="text-danger">*</span></label>
-                                <span asp-validation-for="Input.TenCongViec" class="text-danger p-2"></span>
+                                <input asp-for="Input.TenDuAn" class="form-control" aria-required="true" placeholder="Nhập tên công việc để tìm kiếm" />
+                                <label asp-for="Input.TenDuAn">Tên dự án <span class="text-danger">*</span></label>
+                                <span asp-validation-for="Input.TenDuAn" class="text-danger p-2"></span>
                             </div>
 
                             <div class="form-floating">
-                                <input asp-for="Input.MoTaCongViec" class="form-control" aria-required="true" placeholder="Nhập tên công việc để tìm kiếm" />
-                                <label asp-for="Input.MoTaCongViec">Mô tả công việc <span class="text-danger">*</span></label>
-                                <span asp-validation-for="Input.MoTaCongViec" class="text-danger p-2"></span>
+                                <input asp-for="Input.MoTaDuAn" class="form-control" aria-required="true" placeholder="Nhập tên công việc để tìm kiếm" />
+                                <label asp-for="Input.MoTaDuAn">Mô tả dự án <span class="text-danger">*</span></label>
+                                <span asp-validation-for="Input.MoTaDuAn" class="text-danger p-2"></span>
                             </div>
 
                             <div class="form-floating">
@@ -78,32 +80,8 @@
                                 <span asp-validation-for="Input.TrangThai" class="text-danger p-2"></span>
                             </div>
 
-                            <div class="form-floating">
-                                <select asp-for="Input.MucDoUuTien" class="form-control">
-                                    <option>- Chọn mức độ ưu tiên -</option>
-                                    <option value="-1">Không áp dụng</option>
-                                    <option value="0">Thấp</option>
-                                    <option value="1">Trung bình</option>
-                                    <option value="2">Cao</option>
-                                </select>
-                                <label asp-for="Input.MucDoUuTien">Mức độ ưu tiên <span class="text-danger">*</span></label>
-                                <span asp-validation-for="Input.MucDoUuTien" class="text-danger p-2"></span>
-                            </div>
-
-                            <div class="form-floating">
-                                <select asp-for="Input.MaDuAn" class="form-control">
-                                    <option>- Chọn dự án -</option>
-                                    @foreach (var duAn in Model.duAns)
-                                    {
-                                        <option value="@duAn.MaDuAn">@duAn.TenDuAn</option>
-                                    }
-                                </select>
-                                <label asp-for="Input.MaDuAn">Dự án <span class="text-danger">*</span></label>
-                                <span asp-validation-for="Input.MaDuAn" class="text-danger p-2"></span>
-                            </div>
-
                             <div class="button">
-                                <button class="btn btn-primary" type="submit">Cập nhật</button>
+                                <button class="btn btn-primary" type="submit">Thêm mới</button>
                                 <hr />
                                 <a class="btn btn-primary" asp-page="./Index"><i class="lni lni-chevron-left me-2"></i> Trở lại</a>
                             </div>

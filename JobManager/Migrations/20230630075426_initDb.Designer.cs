@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230629141306_initDb")]
+    [Migration("20230630075426_initDb")]
     partial class initDb
     {
         /// <inheritdoc />
@@ -39,6 +39,9 @@ namespace JobManager.Migrations
                     b.Property<string>("MoTaCongViec")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MucDoUuTien")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("NgayBatDau")
                         .HasColumnType("datetime2");
 
@@ -52,9 +55,6 @@ namespace JobManager.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TrangThai")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UuTien")
                         .HasColumnType("int");
 
                     b.HasKey("MaCongViec");

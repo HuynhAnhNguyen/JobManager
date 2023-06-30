@@ -96,7 +96,7 @@ namespace JobManager.Migrations
                     NgayBatDau = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NgayKetThuc = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),
-                    UuTien = table.Column<int>(type: "int", nullable: true),
+                    MucDoUuTien = table.Column<int>(type: "int", nullable: true),
                     MaDuAn = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Deleted = table.Column<bool>(type: "bit", nullable: true),
                     NgayTaoCongViec = table.Column<DateTime>(type: "datetime2", nullable: true)

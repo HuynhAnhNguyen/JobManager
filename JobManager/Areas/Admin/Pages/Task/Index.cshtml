@@ -1,4 +1,161 @@
 ﻿@page
 @model IndexModel
 @{
+    ViewData["Title"] = "List Jobs";
 }
+@{
+    var pagingModel = new JobManager.Helpers.PagingModel()
+            {
+                currentPage = Model.currentPage,
+                countPages = Model.countPage,
+                generateUrl = (int? p) => Url.Page("/Task/Index", new { p = p })
+            };
+}
+
+
+<!-- ========== section start ========== -->
+<section class="section">
+    <div class="container-fluid">
+        <!-- ========== title-wrapper start ========== -->
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-md-6">
+                    <div class="breadcrumb-wrapper mb-30">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- ========== title-wrapper end ========== -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    @*Start*@
+
+                    <div class="mb-2">
+                        <a class="btn btn-outline-primary" asp-page="./Create"><i class="lni lni-plus"></i> Thêm dự án</a>
+                    </div>
+                    @if (Model.soLuongDuAn > 0)
+                    {
+                        @*<br />
+                    <div class="mb-2">
+                    <a class="btn btn-outline-primary" id="exportColorExcelBtn"><i class="fa-regular fa-file-excel"></i></a>
+                    <a class="btn btn-outline-primary" id="exportColorPdfBtn"><i class="fa-regular fa-file-pdf"></i></a>
+                    </div>*@
+                        <br />
+                        <form method="get" asp-page="./Index">
+                            <div class="input-group">
+                                <input type="search" class="form-control rounded" name="Search" placeholder="Nhập tên dự án để tìm kiếm" />
+                                <button type="submit" class="btn btn-outline-primary"><i class="lni lni-search-alt"></i> Search</button>
+                            </div>
+                        </form>
+                        <br />
+                        <partial name="_StatusMessage" model="@Model.StatusMessage" />
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>No.</th>
+                                <th>Task name</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            @{
+                                var stt = 1;
+                            }
+                            @foreach (var duAn in Model.duAns)
+                            {
+                                <tr>
+                                    <td>
+                                        @stt
+                                        @{
+                                            stt++;
+                                        }
+                                    </td>
+                                    <td><a asp-page="./Edit" asp-route-taskid="@duAn.MaDuAn">@duAn.TenDuAn</a></td>
+                                    @switch (duAn.TrangThai)
+                                    {
+                                        case -1:
+                                            <td>Quá hạn</td>
+                                            break;
+                                        case 0:
+                                            <td>Chưa bắt đầu</td>
+                                            break;
+                                        case 1:
+                                            <td>Đang thực hiện</td>
+                                            break;
+                                        default:
+                                            <td>Đã kết thúc</td>
+                                            break;
+                                    }
+                                    <td>
+                                        <a asp-page="./Detail" asp-route-taskid="@duAn.MaDuAn" class="btn btn-outline-primary"><i class="lni lni-more"></i></a>
+                                        <a asp-page="./Edit" asp-route-taskid="@duAn.MaDuAn" class="btn btn-outline-success"><i class="lni lni-pencil"></i></a>
+                                        <a class="btn btn-outline-danger DeleteBtn" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-@duAn.MaDuAn"><i class="lni lni-trash-can"></i></a>
+
+                                        <div class="modal" id="confirmDeleteModal-@duAn.MaDuAn" tabindex="-1" aria-labelledby="confirmDeleteLabel-@duAn.MaDuAn" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmDeleteLabel-@duAn.MaDuAn">Xác nhận xóa? </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Xác nhận xóa dự án <strong>@duAn.MaDuAn - @duAn.TenDuAn</strong>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                        <form method="post" asp-page="./Delete" asp-route-taskid="@duAn.MaDuAn">
+                                                            <button type="submit" class="btn btn-danger">Xóa</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*<form class="form-inline" style="display: inline;" asp-page="./PrintBill" asp-route-taskid="@duAn.MaDuAn">
+                                            <button type="submit" class="btn btn-outline-secondary"><i class="lni lni-printer"></i></button>
+                                        </form>*@
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                        <partial name="_Paging" model="pagingModel" />
+                    }
+                    else
+                    {
+
+                        <div class="text-center">
+                            <div>
+                                <div style="font-size: 20px; color: black"><br>--- Danh sách trống ---</div>
+                            </div>
+
+                        </div>
+
+                    }
+
+
+
+                    @*End*@
+                    <!-- End Chart -->
+                </div>
+            </div>
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- end container -->
+</section>
+<!-- ========== section end ========== -->

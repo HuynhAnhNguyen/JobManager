@@ -14,7 +14,7 @@
 
         public int? TrangThai { get; set; }
 
-        public int? UuTien { get; set; }
+        public int? MucDoUuTien { get; set; }
 
         public string? MaDuAn { get; set; }
 

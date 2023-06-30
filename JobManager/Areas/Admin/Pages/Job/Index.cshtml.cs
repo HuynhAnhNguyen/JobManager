@@ -26,18 +26,16 @@ namespace JobManager.Areas.Admin.Pages.Job
 
         public async Task<IActionResult> OnGetAsync(string Search)
         {
-            soLuongCongViec = await _context.CongViec.CountAsync();
+            soLuongCongViec = await _context.CongViec.Where(x=> x.Deleted == false).CountAsync();
             if (soLuongCongViec > 0)
             {
-                int totalCongViec = await _context.CongViec.CountAsync();
-
-                countPage = (int)Math.Ceiling((double)totalCongViec / ITEMS_PER_PAGE);
+                countPage = (int)Math.Ceiling((double)soLuongCongViec / ITEMS_PER_PAGE);
 
                 if (currentPage < 1)
                     currentPage = 1;
                 if (currentPage > countPage)
                     currentPage = countPage;
-                var qr = (from p in _context.CongViec orderby p.NgayTaoCongViec descending select p);
+                var qr = (from p in _context.CongViec where p.Deleted == false orderby p.NgayTaoCongViec descending select p);
 
                 if (!string.IsNullOrEmpty(Search))
                 {
