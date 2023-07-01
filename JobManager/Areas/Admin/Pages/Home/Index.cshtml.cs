@@ -21,11 +21,14 @@ namespace JobManager.Areas.Admin.Pages.Home
 
         public int totalJobs { get; set; }
 
+        public int totalRoles { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             totalUsers = await _context.NguoiDung.CountAsync();
             totalTasks = await _context.DuAn.CountAsync();
             totalJobs = await _context.CongViec.CountAsync();
+            totalRoles= await _context.Roles.CountAsync();
             return Page();
         }
 

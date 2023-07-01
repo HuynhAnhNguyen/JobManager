@@ -12,16 +12,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using JobManager.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace JobManager.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly INotyfService _notyf;
+        private readonly IEmailSender _emailSender;
+        private readonly LanguageService _localization;
 
-        public ConfirmEmailModel(UserManager<NguoiDung> userManager)
+        public ConfirmEmailModel(UserManager<NguoiDung> userManager, INotyfService notyf, IEmailSender emailSender, LanguageService localization)
         {
             _userManager = userManager;
+            _notyf = notyf;
+            _emailSender = emailSender;
+            _localization = localization;
         }
 
         /// <summary>
@@ -34,18 +43,32 @@ namespace JobManager.Areas.Identity.Pages.Account
         {
             if (userId == null || code == null)
             {
+                _notyf.Error("Không thể xác nhận email ngay lúc này", 3);
                 return RedirectToPage("/Index");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
+            string emailAddress = user.Email;
+
             if (user == null)
             {
+                _notyf.Error("Không tìm thấy user", 3);
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            if (result.Succeeded)
+            {
+                //StatusMessage = _localization.Getkey("XacNhanEmailThanhCong");
+                _notyf.Success("Xác nhận thành công");
+            }
+            else
+            {
+                //StatusMessage = _localization.Getkey("LoLoiXacNhanEmaiLoiXacNhanEmail");
+                _notyf.Error("Lỗi xác nhận địa chỉ email", 3);
+            }
+            //StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
             return Page();
         }
     }

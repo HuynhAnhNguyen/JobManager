@@ -24,6 +24,8 @@ namespace JobManager.Areas.Admin.Pages.User
 
         public List<NguoiDung> soLuongUser { get; set; }
 
+        public int totalUser { get; set; }
+
         public List<UserAndRole> users { get; set; }
 
         public const int ITEMS_PER_PAGE = 10;
@@ -39,12 +41,11 @@ namespace JobManager.Areas.Admin.Pages.User
             return Regex.IsMatch(input, @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
         }
 
-        public async void OnGetAsync(string Search)
+        public async Task<IActionResult> OnGetAsync(string Search)
         {
-            soLuongUser = await _context.NguoiDung.ToListAsync();
-            if (soLuongUser.Count() > 0)
+            totalUser = await _context.NguoiDung.CountAsync();
+            if (totalUser > 0)
             {
-                int totalUser = await _context.NguoiDung.CountAsync();
                 countPage = (int)Math.Ceiling((double)totalUser / ITEMS_PER_PAGE);
 
                 if (currentPage < 1)
@@ -77,14 +78,15 @@ namespace JobManager.Areas.Admin.Pages.User
                     users = qr.Skip((currentPage - 1) * ITEMS_PER_PAGE).Take(ITEMS_PER_PAGE).ToList();
 
                 }
-                foreach (var user in users)
-                {
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var statusAccount = await _context.NguoiDung.Where(a => a.Id == user.Id).Select(a => a.DisableAccount).FirstOrDefaultAsync();
-                    user.statusAccount = statusAccount;
-                    user.RoleNames = string.Join(", ", roles);
-                }
+                //foreach (var user in users)
+                //{
+                //    var roles = await _userManager.GetRolesAsync(user);
+                //    var statusAccount = await _context.NguoiDung.Where(a => a.Id == user.Id).Select(a => a.DisableAccount).FirstOrDefaultAsync();
+                //    user.statusAccount = statusAccount;
+                //    user.RoleNames = string.Join(", ", roles);
+                //}
             }
+            return Page();
 
         }
 

@@ -1,4 +1,253 @@
 ﻿@page
 @model IndexModel
 @{
+    var pagingModel = new JobManager.Helpers.PagingModel()
+            {
+                currentPage = Model.currentPage,
+                countPages = Model.countPage,
+                generateUrl = (int? p) => Url.Page("/User/Index", new { p = p })
+            };
 }
+
+
+<!-- ========== section start ========== -->
+<section class="section">
+    <div class="container-fluid">
+        <!-- ========== title-wrapper start ========== -->
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                    </div>
+                </div>
+                <!-- end col -->
+                <div class="col-md-6">
+                    <div class="breadcrumb-wrapper mb-30">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- ========== title-wrapper end ========== -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    @*Start*@
+                    @if (Model.totalUser > 0)
+                    {
+                        @*<br />
+                        <div class="mb-2">
+                            <a class="btn btn-outline-primary" id="exportUserExcelBtn"><i class="fa-regular fa-file-excel"></i></a>
+                            <a class="btn btn-outline-primary" id="exportUserPdfBtn"><i class="fa-regular fa-file-pdf"></i></a>
+                        </div>
+                        <br />*@
+                        <form method="get" asp-page="./Index">
+                            <div class="input-group">
+                                <input type="search" class="form-control rounded" name="Search" placeholder="Nhập username/ email" />
+                                <button type="submit" class="btn btn-outline-primary"><i class="lni lni-search-alt"></i> Search</button>
+                            </div>
+                        </form>
+                        <br />
+                        <partial name="_StatusMessage" model="@Model.StatusMessage" />
+                        <br />
+                        <table class="table">
+                            <tr>
+                                <th>STT</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Confirm Account</th>
+                                <th>Status Account</th>
+                                <th>Action</th>
+                            </tr>
+                            @{
+                                var stt = 1;
+                            }
+                            @foreach (var user in Model.users)
+                            {
+                                <tr>
+                                    <td>
+                                        @stt
+                                        @{
+                                            stt++;
+                                        }
+                                    </td>
+                                    <td><a asp-page="./SetPassword" asp-route-id="@user.Id">@user.UserName</a></td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(user.RoleNames))
+                                        {
+                                            <a asp-page="./AddRole" asp-route-id="@user.Id"><i class="lni lni-plus"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-page="./AddRole" asp-route-id="@user.Id">@user.RoleNames</a>
+
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <a asp-page="./ConfirmAccount" asp-route-id="@user.Id" class="btn-outline-success">Đã xác nhận</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-page="./ConfirmAccount" asp-route-id="@user.Id" class="btn-outline-danger">Chưa xác nhận</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.statusAccount.Equals(-1))
+                                        {
+                                            <a asp-page="./DisableAccount" asp-route-id="@user.Id" class="btn-outline-danger">Đã bị khóa</a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-page="./DisableAccount" asp-route-id="@user.Id" class="btn-outline-success">Bình thường</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-primary SetPasswordBtn" data-bs-toggle="modal" data-bs-target="#confirmSetPasswordModal-@user.Id"><i class="lni lni-cogs"></i></a>
+
+                                        <div class="modal" id="confirmSetPasswordModal-@user.Id" tabindex="-1" aria-labelledby="confirmSetPasswordLabel-@user.Id" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmSetPasswordLabel-@user.Id">@_localization.Getkey("SetPasswordUserTitle")</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @_localization.Getkey("SetPasswordUser") <strong>@user.UserName</strong>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@_localization.Getkey("Cancel")</button>
+                                                        <form method="post" asp-page="./SetPassword" asp-route-id="@user.Id">
+                                                            <button type="submit" class="btn btn-success">@_localization.Getkey("SetPassword")</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a class="btn btn-outline-secondary" asp-page="./ListReceipt" asp-route-id="@user.Id"><i class="lni lni-list"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <div class="modal" id="confirmExportUserExcelModal" tabindex="-1" aria-labelledby="confirmExportUserExcelLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmExportUserExcelLabel">@_localization.Getkey("ConfirmPrintBill")</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @_localization.Getkey("UserExcel")
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@_localization.Getkey("Cancel")</button>
+                                        <form method="post" asp-page="./ExportUserExcel">
+                                            <button type="submit" class="btn btn-primary" id="confirmExportExcelBtn">@_localization.Getkey("PrintBill")</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal" id="confirmExportUserPdfModal" tabindex="-1" aria-labelledby="confirmExportUserPdfLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmExportUserPdfLabel">@_localization.Getkey("ConfirmPrintBill")</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @_localization.Getkey("UserPdf")
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@_localization.Getkey("Cancel")</button>
+                                        <form method="post" asp-page="./ExportUserPdf">
+                                            <button type="submit" class="btn btn-primary" id="confirmExportPdfBtn">@_localization.Getkey("PrintBill")</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <partial name="_Paging" model="pagingModel" />
+                    }
+                    else
+                    {
+                        <div class="text-center">
+                            <div>
+                                <div style="font-size: 20px; color: black"><br>--- @_localization.Getkey("List_empty") ---</div>
+                            </div>
+
+                        </div>
+                    }
+                    @section Scripts {
+                        <partial name="_ValidationScriptsPartial" />
+                        <script>
+                            $(document).on('click', '#exportUserExcelBtn', function () {
+                                // Hiển thị modal khi người dùng click vào nút export excel
+                                $('#confirmExportUserExcelModal').modal('show');
+
+                                // Xác nhận export excel khi người dùng click vào nút Export trong modal
+                                $('#confirmExportExcelBtn').click(function () {
+
+                                    // Ẩn modal sau khi xác nhận export excel
+                                    $('#confirmExportUserExcelModal').modal('hide');
+                                    alert("Xuất file excel thành công.");
+                                });
+                            });
+                        </script>
+
+                        <script>
+                            $(document).on('click', '#exportUserPdfBtn', function () {
+                                // Hiển thị modal khi người dùng click vào nút export excel
+                                $('#confirmExportUserPdfModal').modal('show');
+
+                                // Xác nhận export excel khi người dùng click vào nút Export trong modal
+                                $('#confirmExportPdfBtn').click(function () {
+
+                                    // Ẩn modal sau khi xác nhận export excel
+                                    $('#confirmExportUserPdfModal').modal('hide');
+                                    alert("Xuất file pdf thành công.");
+                                });
+                            });
+                        </script>
+
+                        <script>
+                            $(document).on('click', '.SetPasswordBtn', function () {
+                                // Lấy ra ID của modal từ data-bs-target
+                                var targetModalId = $(this).data('bs-target');
+
+                                // Hiển thị modal
+                                $(targetModalId).modal('show');
+
+                                // Xác nhận xóa khi người dùng click vào nút Xóa trong modal
+                                $(targetModalId).find('form').submit(function () {
+                                    // Ẩn modal sau khi xác nhận xóa
+                                    $(targetModalId).modal('hide');
+                                });
+                            });
+                        </script>
+                    }
+
+
+                    @*End*@
+                    <!-- End Chart -->
+                </div>
+            </div>
+            <!-- End Col -->
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- end container -->
+</section>
+<!-- ========== section end ========== -->

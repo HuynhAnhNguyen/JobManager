@@ -6,6 +6,7 @@ using JobManager.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -72,7 +73,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.ConfigureApplicationCookie(option =>
 {
     option.LoginPath = $"/Identity/Account/Login";
-    option.LogoutPath = $"/Store/Login/Logout";
+    option.LogoutPath = $"/Identity/Account/Logout";
     option.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 
@@ -135,6 +136,17 @@ builder.Services.Configure<IdentityOptions>(options => {
 });
 
 builder.Services.AddHttpClient();
+
+//builder.Services.AddMvc().AddRazorPagesOptions(options => {
+//    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+//}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+builder.Services.AddRazorPages()
+        .AddRazorPagesOptions(options =>
+        {
+            options.Conventions.AuthorizeAreaPage("Admin", "/Home/Index");
+        });
+
 
 
 var app = builder.Build();
